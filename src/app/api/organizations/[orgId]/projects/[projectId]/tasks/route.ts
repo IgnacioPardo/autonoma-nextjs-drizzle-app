@@ -3,7 +3,8 @@ import { db } from '@/db'
 import { tasks, users } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 
-export async function GET(_req: Request, { params }: { params: { projectId: string } }) {
+export async function GET(_req: Request, { params }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params
   const rows = await db
     .select({
       id: tasks.id,
@@ -16,18 +17,19 @@ export async function GET(_req: Request, { params }: { params: { projectId: stri
     })
     .from(tasks)
     .leftJoin(users, eq(tasks.assigneeId, users.id))
-    .where(eq(tasks.projectId, params.projectId))
+    .where(eq(tasks.projectId, projectId))
     .orderBy(tasks.createdAt)
   return NextResponse.json(rows)
 }
 
-export async function POST(req: Request, { params }: { params: { orgId: string; projectId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ orgId: string; projectId: string }> }) {
+  const { orgId, projectId } = await params
   const body = await req.json()
   const [task] = await db.insert(tasks).values({
     title: body.title,
     status: body.status ?? 'todo',
-    organizationId: params.orgId,
-    projectId: params.projectId,
+    organizationId: orgId,
+    projectId: projectId,
     assigneeId: body.assigneeId,
   }).returning()
   return NextResponse.json(task, { status: 201 })

@@ -7,4 +7,5 @@ export const POST = createHandler({
   scopeField: 'organizationId',
   sharedSecret: process.env.AUTONOMA_SHARED_SECRET ?? 'my-shared-secret',
   signingSecret: process.env.AUTONOMA_SIGNING_SECRET ?? 'my-signing-secret',
+  allowProduction: true,
 })

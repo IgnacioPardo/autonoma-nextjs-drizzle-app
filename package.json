@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@autonoma-ai/sdk": "latest",
-    "@autonoma-ai/sdk-drizzle": "latest",
+    "@autonoma-ai/sdk-pg": "latest",
     "@autonoma-ai/server-web": "latest",
     "drizzle-orm": "^0.45.1",
     "next": "^14.2.0",

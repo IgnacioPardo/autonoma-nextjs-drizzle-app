@@ -10,6 +10,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ project
       id: tasks.id,
       title: tasks.title,
       status: tasks.status,
+      deadline: tasks.deadline,
       projectId: tasks.projectId,
       assigneeId: tasks.assigneeId,
       assigneeName: users.name,
@@ -28,6 +29,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ orgId: 
   const [task] = await db.insert(tasks).values({
     title: body.title,
     status: body.status ?? 'todo',
+    deadline: new Date(body.deadline),
     organizationId: orgId,
     projectId: projectId,
     assigneeId: body.assigneeId,

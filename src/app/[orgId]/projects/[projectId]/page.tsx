@@ -7,6 +7,7 @@ interface Task {
   id: string
   title: string
   status: string
+  deadline: string
   assigneeId: string
   assigneeName: string | null
   createdAt: string
@@ -28,6 +29,7 @@ export default function ProjectPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [title, setTitle] = useState('')
+  const [deadline, setDeadline] = useState('')
   const [assigneeId, setAssigneeId] = useState('')
 
   const apiBase = `/api/organizations/${orgId}/projects/${projectId}`
@@ -42,13 +44,14 @@ export default function ProjectPage() {
 
   const createTask = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!title.trim() || !assigneeId) return
+    if (!title.trim() || !assigneeId || !deadline) return
     await fetch(`${apiBase}/tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: title.trim(), assigneeId }),
+      body: JSON.stringify({ title: title.trim(), deadline, assigneeId }),
     })
     setTitle('')
+    setDeadline('')
     setAssigneeId('')
     fetchAll()
   }
@@ -78,6 +81,7 @@ export default function ProjectPage() {
 
       <form onSubmit={createTask} className="flex gap-2 mb-8">
         <input value={title} onChange={e => setTitle(e.target.value)} placeholder="New task title" className="border rounded px-3 py-2 flex-1" />
+        <input type="date" value={deadline} onChange={e => setDeadline(e.target.value)} min={new Date().toISOString().split('T')[0]} className="border rounded px-3 py-2" />
         <select value={assigneeId} onChange={e => setAssigneeId(e.target.value)} className="border rounded px-3 py-2">
           <option value="">Assign to...</option>
           {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
@@ -93,7 +97,8 @@ export default function ProjectPage() {
               {tasks.filter(t => t.status === status).map(task => (
                 <li key={task.id} className="bg-white border rounded p-3 shadow-sm">
                   <p className="font-medium text-sm">{task.title}</p>
-                  <p className="text-xs text-gray-400 mt-1">{task.assigneeName ?? 'Unassigned'}</p>
+                  <p className="text-xs text-gray-400 mt-1">Due: {new Date(task.deadline).toLocaleDateString()}</p>
+                  <p className="text-xs text-gray-400">{task.assigneeName ?? 'Unassigned'}</p>
                   <div className="flex gap-1 mt-2">
                     {STATUS_COLS.filter(s => s !== status).map(s => (
                       <button key={s} onClick={() => updateStatus(task.id, s)} className="text-xs px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200">

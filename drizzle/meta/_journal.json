@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1775754757485,
+      "tag": "0000_add-cascade-deletes",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775756461132,
+      "tag": "0001_add-task-deadline",
+      "breakpoints": true
+    }
+  ]
+}

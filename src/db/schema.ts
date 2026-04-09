@@ -27,6 +27,7 @@ export const tasks = pgTable('tasks', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: text('title').notNull(),
   status: text('status').notNull().default('todo'),
+  deadline: timestamp('deadline').notNull(),
   organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
   projectId: uuid('project_id').notNull().references(() => projects.id, { onDelete: 'cascade' }),
   assigneeId: uuid('assignee_id').notNull().references(() => users.id, { onDelete: 'cascade' }),

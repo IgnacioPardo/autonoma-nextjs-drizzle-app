@@ -9,6 +9,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ taskId
   const updates: Record<string, unknown> = {}
   if (body.title !== undefined) updates.title = body.title
   if (body.status !== undefined) updates.status = body.status
+  if (body.deadline !== undefined) updates.deadline = new Date(body.deadline)
   if (body.assigneeId !== undefined) updates.assigneeId = body.assigneeId
 
   const [task] = await db.update(tasks).set(updates).where(eq(tasks.id, taskId)).returning()

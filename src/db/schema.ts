@@ -11,7 +11,7 @@ export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').notNull().unique(),
   name: text('name').notNull(),
-  organizationId: uuid('organization_id').notNull().references(() => organizations.id),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
@@ -19,7 +19,7 @@ export const projects = pgTable('projects', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
   description: text('description'),
-  organizationId: uuid('organization_id').notNull().references(() => organizations.id),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
@@ -27,9 +27,9 @@ export const tasks = pgTable('tasks', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: text('title').notNull(),
   status: text('status').notNull().default('todo'),
-  organizationId: uuid('organization_id').notNull().references(() => organizations.id),
-  projectId: uuid('project_id').notNull().references(() => projects.id),
-  assigneeId: uuid('assignee_id').notNull().references(() => users.id),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  projectId: uuid('project_id').notNull().references(() => projects.id, { onDelete: 'cascade' }),
+  assigneeId: uuid('assignee_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
